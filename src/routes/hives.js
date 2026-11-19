@@ -11,4 +11,13 @@ router.get("/", (req, res) => {
   res.json(resultat);
 });
 
+// GET /api/hives/:id
+router.get("/:id", (req, res) => {
+  const ruche = hives.find((h) => h.id === req.params.id);
+  if (!ruche) {
+    return res.status(404).json({ error: `Ruche inconnue : ${req.params.id}` });
+  }
+  res.json(ruche);
+});
+
 export default router;
