@@ -5,3 +5,6 @@ export const hives = [
   { id: "SN-DAKA-001", site_id: "SN-DAKA", status: "active" },
   { id: "SN-DAKA-002", site_id: "SN-DAKA", status: "active" },
 ];
+
+// Les mesures reçues sont gardées ici (en mémoire, perdues au redémarrage).
+export const measures = [];
