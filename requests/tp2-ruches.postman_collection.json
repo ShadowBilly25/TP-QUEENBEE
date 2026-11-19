@@ -1,0 +1,269 @@
+{
+  "info": {
+    "name": "TP 2 - API des ruches",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET /health (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/hives (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/hives",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/hives?site_id=SN-CASA (200, que SN-CASA)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/hives?site_id=SN-CASA",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives"
+          ],
+          "query": [
+            {
+              "key": "site_id",
+              "value": "SN-CASA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/hives?site_id= (200, toutes)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/hives?site_id=",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives"
+          ],
+          "query": [
+            {
+              "key": "site_id",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/hives/SN-CASA-001 (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/SN-CASA-001",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "SN-CASA-001"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /api/hives/XX-NOPE-999 (404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/XX-NOPE-999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "XX-NOPE-999"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST mesure complète (201)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "SN-CASA-001",
+            "measures"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST mesure sans timestamp (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "SN-CASA-001",
+            "measures"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST mesure sans weight_kg (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "SN-CASA-001",
+            "measures"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST mesure, ruche inconnue (404)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/XX-NOPE-999/measures",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "XX-NOPE-999",
+            "measures"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST mesure, hive_id différent du chemin (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/hives/SN-DAKA-001/measures",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "hives",
+            "SN-DAKA-001",
+            "measures"
+          ]
+        }
+      }
+    }
+  ]
+}
