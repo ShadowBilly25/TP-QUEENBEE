@@ -1,6 +1,7 @@
 import express from "express";
 import { requestLogger } from "./middleware/requestLogger.js";
 import hivesRouter from "./routes/hives.js";
+import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
 
 const app = express();
 
@@ -13,12 +14,8 @@ app.get("/health", (req, res) => {
 
 app.use("/api/hives", hivesRouter);
 
-// JSON invalide : 400 au lieu d'une page d'erreur HTML.
-app.use((err, req, res, next) => {
-  if (err.type === "entity.parse.failed") {
-    return res.status(400).json({ error: "JSON invalide" });
-  }
-  next(err);
-});
+// Toujours en dernier, après toutes les routes : d'abord la route inconnue, puis le filet d'erreurs.
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;
