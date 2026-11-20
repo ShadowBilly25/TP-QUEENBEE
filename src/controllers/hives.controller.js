@@ -1,55 +1,35 @@
-export function createHivesController({
-  hivesService,
-  measuresService,
-  inspectionsService,
-}) {
+// Contrôleur : que dit la requête, que répondre ? Il lit req, appelle un service, écrit res.
+// Il ne contient ni règle métier ni accès aux données : il n'importe jamais un repository.
+// Express 5 transmet à l'intergiciel d'erreurs toute exception ou promesse rejetée d'un gestionnaire :
+// pas de try/catch ici.
+export function createHivesController({ hivesService, measuresService, inspectionsService }) {
   return {
-    getAllHives(req, res) {
-      const hives = hivesService.getAllHives({
-        site_id: req.query.site_id || undefined,
-      });
-
-      res.status(200).json(hives);
+    async list(req, res) {
+      // Un site_id vide équivaut à son absence.
+      const ruches = await hivesService.list({ site_id: req.query.site_id || undefined });
+      res.json(ruches);
     },
 
-    getHiveById(req, res) {
-      const hive = hivesService.getHiveById(req.params.id);
-
-      res.status(200).json(hive);
+    async getOne(req, res) {
+      res.json(await hivesService.getById(req.params.id));
     },
 
-    addMeasure(req, res) {
-      const measure = measuresService.addMeasure(
-        req.params.id,
-        req.body
-      );
-
-      res.status(201).json(measure);
+    async addMeasure(req, res) {
+      const mesure = await measuresService.add(req.params.id, req.body);
+      res.status(201).json(mesure);
     },
 
-    getMeasures(req, res) {
-      const result = measuresService.getMeasures(
-        req.params.id,
-        req.query
-      );
-
-      res.status(200).json(result);
+    async listMeasures(req, res) {
+      const { limit, offset } = req.query;
+      res.json(await measuresService.list(req.params.id, { limit, offset }));
     },
 
-    getInspections(req, res) {
-      const inspections = inspectionsService.getInspections(
-        req.params.id
-      );
-
-      res.status(200).json(inspections);
+    async listInspections(req, res) {
+      res.json(await inspectionsService.list(req.params.id));
     },
 
-    addInspection(req, res) {
-      const inspection = inspectionsService.addInspection(
-        req.params.id,
-        req.body
-      );
-
+    async addInspection(req, res) {
+      const inspection = await inspectionsService.add(req.params.id, req.body);
       res.status(201).json(inspection);
     },
   };
