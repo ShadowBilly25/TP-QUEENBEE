@@ -1,21 +1,61 @@
 import express from "express";
+
+import { createHivesRouter } from "./routes/hives/hives.router.js";
+import { createHivesController } from "./controllers/hives.controller.js";
+
+import { createHivesService } from "./services/hives.service.js";
+import { createMeasuresService } from "./services/measures.service.js";
+import { createInspectionsService } from "./services/inspections.service.js";
+
 import { requestLogger } from "./middleware/requestLogger.js";
-import hivesRouter from "./routes/hives.js";
-import { notFoundHandler, errorHandler } from "./middlewares/errorHandler.js";
+import {
+  notFoundHandler,
+  errorHandler,
+} from "./middlewares/errorHandler.js";
 
-const app = express();
+export function createApp({
+  hivesRepository,
+  measuresRepository,
+  inspectionsRepository,
+}) {
+  const app = express();
 
-app.use(requestLogger);
-app.use(express.json());
+  // Middlewares
+  app.use(express.json());
+  app.use(requestLogger);
 
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
-});
+  // Services
+  const hivesService = createHivesService({
+    hivesRepository,
+  });
 
-app.use("/api/hives", hivesRouter);
+  const measuresService = createMeasuresService({
+    hivesService,
+    measuresRepository,
+  });
 
-// Toujours en dernier, après toutes les routes : d'abord la route inconnue, puis le filet d'erreurs.
-app.use(notFoundHandler);
-app.use(errorHandler);
+  const inspectionsService = createInspectionsService({
+    hivesService,
+    inspectionsRepository,
+  });
 
-export default app;
+  // Controller
+  const hivesController = createHivesController({
+    hivesService,
+    measuresService,
+    inspectionsService,
+  });
+
+  // Routes
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+  });
+
+  app.use("/api/hives", createHivesRouter(hivesController));
+
+  // Gestion des erreurs : toujours à la fin
+  app.use(notFoundHandler);
+  app.use(errorHandler);
+
+  return app;
+}

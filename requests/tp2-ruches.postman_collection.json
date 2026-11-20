@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "TP 2 - API des ruches",
+    "name": "API des ruches (TP 2 et 3)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -11,259 +11,815 @@
   ],
   "item": [
     {
-      "name": "GET /health (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/health",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "health"
-          ]
-        }
-      }
-    },
-    {
-      "name": "GET /api/hives (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/hives",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives"
-          ]
-        }
-      }
-    },
-    {
-      "name": "GET /api/hives?site_id=SN-CASA (200, que SN-CASA)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/hives?site_id=SN-CASA",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives"
-          ],
-          "query": [
-            {
-              "key": "site_id",
-              "value": "SN-CASA"
+      "name": "Santé",
+      "item": [
+        {
+          "name": "GET /health (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
             }
-          ]
+          }
         }
-      }
+      ]
     },
     {
-      "name": "GET /api/hives?site_id= (200, toutes)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/hives?site_id=",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives"
-          ],
-          "query": [
-            {
-              "key": "site_id",
-              "value": ""
+      "name": "Ruches",
+      "item": [
+        {
+          "name": "GET /api/hives (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives"
+              ]
             }
-          ]
-        }
-      }
-    },
-    {
-      "name": "GET /api/hives/SN-CASA-001 (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/SN-CASA-001",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "SN-CASA-001"
-          ]
-        }
-      }
-    },
-    {
-      "name": "GET /api/hives/XX-NOPE-999 (404)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/XX-NOPE-999",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "XX-NOPE-999"
-          ]
-        }
-      }
-    },
-    {
-      "name": "POST mesure complète (201)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "SN-CASA-001",
-            "measures"
-          ]
+        {
+          "name": "GET /api/hives?site_id=SN-CASA (200, que SN-CASA)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives?site_id=SN-CASA",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives"
+              ],
+              "query": [
+                {
+                  "key": "site_id",
+                  "value": "SN-CASA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/hives?site_id= (200, toutes)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives?site_id=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives"
+              ],
+              "query": [
+                {
+                  "key": "site_id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/hives/SN-CASA-001 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/hives/XX-NOPE-999 (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/XX-NOPE-999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "XX-NOPE-999"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "POST mesure sans timestamp (400)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "Mesures",
+      "item": [
+        {
+          "name": "POST mesure complète (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "SN-CASA-001",
-            "measures"
-          ]
+        {
+          "name": "POST mesure sans timestamp (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST mesure sans weight_kg (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST mesure, ruche inconnue (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/XX-NOPE-999/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "XX-NOPE-999",
+                "measures"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST mesure, hive_id différent du chemin (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-DAKA-001/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-DAKA-001",
+                "measures"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST mesure, JSON mal formé (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{bad"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures (200, limit 50 offset 0 par défaut)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures ?limit=2&offset=0 (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures?limit=2&offset=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures ?limit=2&offset=2 (200, page suivante)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures?limit=2&offset=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "2"
+                },
+                {
+                  "key": "offset",
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures ?limit=0 (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures?limit=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures ?limit=501 (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures?limit=501",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "501"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures ?limit=abc (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures?limit=abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "abc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures ?offset=-1 (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures?offset=-1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "measures"
+              ],
+              "query": [
+                {
+                  "key": "offset",
+                  "value": "-1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET mesures, ruche inconnue (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/XX-NOPE-999/measures",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "XX-NOPE-999",
+                "measures"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "POST mesure sans weight_kg (400)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "Inspections",
+      "item": [
+        {
+          "name": "POST inspection complète (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"forte\",\n  \"queen_present\": true,\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/SN-CASA-001/measures",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "SN-CASA-001",
-            "measures"
-          ]
+        {
+          "name": "POST inspection sans champs facultatifs (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"inspected_at\": \"2026-11-02T09:30:00Z\",\n  \"colony_status\": \"faible\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection id absent (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"forte\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection id pas un UUID (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"123\",\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"forte\",\n  \"queen_present\": true,\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection inspected_at invalide (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"inspected_at\": \"31/10/2026\",\n  \"colony_status\": \"forte\",\n  \"queen_present\": true,\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection colony_status inconnu (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"super\",\n  \"queen_present\": true,\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection queen_present texte (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"forte\",\n  \"queen_present\": \"oui\",\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection, ruche inconnue (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{$guid}}\",\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"forte\",\n  \"queen_present\": true,\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/XX-NOPE-999/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "XX-NOPE-999",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST inspection, id déjà utilisé (409, envoyer deux fois avec le même id)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"0b8f3c7e-4d3a-4f64-9a53-2f6a1d9a7c11\",\n  \"inspected_at\": \"2026-10-31T09:30:00Z\",\n  \"colony_status\": \"forte\",\n  \"queen_present\": true,\n  \"observations\": \"RAS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET inspections (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/SN-CASA-001/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "SN-CASA-001",
+                "inspections"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET inspections, ruche inconnue (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/hives/XX-NOPE-999/inspections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "hives",
+                "XX-NOPE-999",
+                "inspections"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     {
-      "name": "POST mesure, ruche inconnue (404)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
+      "name": "Erreurs générales",
+      "item": [
+        {
+          "name": "GET route inconnue (404 problem+json)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/nimporte/quoi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "nimporte",
+                "quoi"
+              ]
+            }
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/XX-NOPE-999/measures",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "XX-NOPE-999",
-            "measures"
-          ]
         }
-      }
-    },
-    {
-      "name": "POST mesure, hive_id différent du chemin (400)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"hive_id\": \"SN-CASA-001\",\n  \"site_id\": \"SN-CASA\",\n  \"timestamp\": \"2026-10-31T10:00:00Z\",\n  \"position_lat\": 12.5743,\n  \"position_lon\": -16.2873,\n  \"weight_kg\": 36.84,\n  \"temp_internal_c\": 34.4,\n  \"temp_external_c\": 27.1,\n  \"humidity_pct\": 64,\n  \"acoustic_activity_score\": 0.42,\n  \"battery_pct\": 88\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/hives/SN-DAKA-001/measures",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "hives",
-            "SN-DAKA-001",
-            "measures"
-          ]
-        }
-      }
+      ]
     }
   ]
 }
