@@ -1,35 +1,64 @@
-// Contrôleur : que dit la requête, que répondre ? Il lit req, appelle un service, écrit res.
-// Il ne contient ni règle métier ni accès aux données : il n'importe jamais un repository.
-// Express 5 transmet à l'intergiciel d'erreurs toute exception ou promesse rejetée d'un gestionnaire :
-// pas de try/catch ici.
-export function createHivesController({ hivesService, measuresService, inspectionsService }) {
+
+export function createHivesController({
+  hivesService,
+  measuresService,
+  inspectionsService,
+}) {
   return {
+    // Lister les ruches
     async list(req, res) {
-      // Un site_id vide équivaut à son absence.
-      const ruches = await hivesService.list({ site_id: req.query.site_id || undefined });
+      const { site_id } = req.validated.query;
+
+      const ruches = await hivesService.list({
+        site_id: site_id || undefined,
+      });
+
       res.json(ruches);
     },
 
+    // Consulter une ruche
     async getOne(req, res) {
-      res.json(await hivesService.getById(req.params.id));
+      const { id } = req.validated.params;
+
+      res.json(await hivesService.getById(id));
     },
 
+    // Ajouter une mesure
     async addMeasure(req, res) {
-      const mesure = await measuresService.add(req.params.id, req.body);
+      const { id } = req.validated.params;
+      const mesure = await measuresService.add(id, req.validated.body);
+
       res.status(201).json(mesure);
     },
 
+    // Consulter les mesures
     async listMeasures(req, res) {
-      const { limit, offset } = req.query;
-      res.json(await measuresService.list(req.params.id, { limit, offset }));
+      const { id } = req.validated.params;
+      const { limit, offset } = req.validated.query;
+
+      const mesures = await measuresService.list(id, {
+        limit,
+        offset,
+      });
+
+      res.json(mesures);
     },
 
+    // Consulter les inspections
     async listInspections(req, res) {
-      res.json(await inspectionsService.list(req.params.id));
+      const { id } = req.validated.params;
+
+      res.json(await inspectionsService.list(id));
     },
 
+    // Ajouter une inspection
     async addInspection(req, res) {
-      const inspection = await inspectionsService.add(req.params.id, req.body);
+      const { id } = req.validated.params;
+      const inspection = await inspectionsService.add(
+        id,
+        req.validated.body
+      );
+
       res.status(201).json(inspection);
     },
   };

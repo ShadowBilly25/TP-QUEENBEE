@@ -1,24 +1,52 @@
-import { sendProblem } from "../utils/problem.js";
-import { ConflictError, NotFoundError, ValidationError } from "../errors.js";
 
-// Route inconnue : un 404 au format RFC 9457, au lieu de la page HTML d'Express.
-export function notFoundHandler(req, res) {
-  sendProblem(res, 404, `Aucune route ne correspond à ${req.method} ${req.originalUrl}.`);
+import { AppError, NotFoundError, ConflictError } from "../errors.js";
+
+// Gestion des routes inexistantes
+export function notFoundHandler(req, res, next) {
+  next(
+    new NotFoundError(
+      `La route ${req.method} ${req.originalUrl} est introuvable.`
+    )
+  );
 }
 
-// Filet de sécurité : toute erreur non traitée arrive ici. Les quatre paramètres sont
-// obligatoires : c'est à eux qu'Express reconnaît un intergiciel d'erreur.
-// C'est ici, et seulement ici, qu'une erreur métier devient un code HTTP.
+// Gestion centralisée des erreurs
 export function errorHandler(err, req, res, next) {
-  if (res.headersSent) return next(err);
-
-  if (err instanceof ValidationError) return sendProblem(res, 400, err.message);
-  if (err instanceof NotFoundError) return sendProblem(res, 404, err.message);
-  if (err instanceof ConflictError) return sendProblem(res, 409, err.message);
-  if (err.type === "entity.parse.failed") {
-    return sendProblem(res, 400, "Le corps de la requête n'est pas un JSON valide.");
+  if (res.headersSent) {
+    return next(err);
   }
 
-  console.error(err); // la pile va dans le journal du serveur, jamais dans la réponse
-  sendProblem(res, 500, "Une erreur interne est survenue.");
+  // PostgreSQL : violation d'une contrainte d'unicité
+  if (err?.code === "23505") {
+    err = new ConflictError("Cette ressource existe déjà.");
+  }
+
+  const isOperationalError = err instanceof AppError;
+
+  const status = isOperationalError ? err.status : 500;
+  const title = isOperationalError ? err.title : "Internal Server Error";
+  const detail = isOperationalError
+    ? err.message
+    : "Une erreur interne est survenue.";
+
+  if (!isOperationalError) {
+    console.error(err);
+  }
+
+  const problem = {
+    type: "about:blank",
+    title,
+    status,
+    detail,
+    instance: req.originalUrl,
+  };
+
+  if (isOperationalError && err.details !== undefined) {
+    problem.errors = err.details;
+  }
+
+  return res
+    .status(status)
+    .type("application/problem+json")
+    .json(problem);
 }

@@ -1,24 +1,31 @@
-// Erreurs métier. Elles ne connaissent pas HTTP : c'est l'intergiciel d'erreurs
-// (middlewares/errorHandler.js) qui les traduit en codes de statut.
 
-export class NotFoundError extends Error {
-  constructor(message) {
+export class AppError extends Error {
+  constructor(message, status = 500, title = "Internal Server Error", details = undefined) {
     super(message);
-    this.name = "NotFoundError";
+
+    this.name = this.constructor.name;
+    this.status = status;
+    this.title = title;
+    this.details = details;
+
+    Error.captureStackTrace?.(this, this.constructor);
   }
 }
 
-export class ValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "ValidationError";
+export class ValidationError extends AppError {
+  constructor(message, details = undefined) {
+    super(message, 400, "Bad Request", details);
   }
 }
 
-// Ajoutée en plus de l'énoncé : une inspection dont l'UUID existe déjà (409 depuis le TP 3).
-export class ConflictError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "ConflictError";
+export class NotFoundError extends AppError {
+  constructor(message = "Resource not found") {
+    super(message, 404, "Not Found");
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message = "Resource conflict") {
+    super(message, 409, "Conflict");
   }
 }
