@@ -1,23 +1,21 @@
-export function createMeasuresRepository(initialMeasures = []) {
-  const measures = [...initialMeasures];
+// Du plus récent au plus ancien. Le tri est stable : à date égale, l'ordre d'arrivée est conservé,
+// donc une page ne répète jamais une ligne de la page précédente.
+const parDateDecroissante = (a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp);
+
+export function createMeasuresRepository() {
+  const mesures = [];
 
   return {
-    findByHiveId(hiveId) {
-      return measures
-        .filter(measure => measure.hive_id === hiveId)
-        .sort(
-          (a, b) =>
-            new Date(b.timestamp) - new Date(a.timestamp)
-        );
+    async add(mesure) {
+      mesures.push(mesure);
+      return mesure;
     },
 
-    create(measure) {
-      measures.push(measure);
-      return measure;
-    },
-
-    count() {
-      return measures.length;
+    async findByHive(hiveId, { limit, offset }) {
+      return mesures
+        .filter((m) => m.hive_id === hiveId)
+        .sort(parDateDecroissante)
+        .slice(offset, offset + limit);
     },
   };
 }
