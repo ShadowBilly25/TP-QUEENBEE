@@ -13,6 +13,7 @@ import { createHivesController } from "./controllers/hives.controller.js";
 import { createAuthController } from "./controllers/auth.controller.js";
 
 import { createHivesRouter } from "./routes/hives/hives.router.js";
+import { createInspectionsRouter } from "./routes/inspections/inspections.router.js";
 import { createAuthRouter } from "./routes/auth/auth.router.js";
 
 import { createRequireAuth } from "./middlewares/auth.js";
@@ -57,6 +58,8 @@ export function createApp({
     "/api/hives",
     createHivesRouter(hivesController, { requireAuth }),
   );
+
+  app.use("/api/inspections", createInspectionsRouter(hivesController, { requireAuth }));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

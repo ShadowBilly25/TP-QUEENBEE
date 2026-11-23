@@ -1,15 +1,27 @@
+
 export function createInspectionsRepository(pool) {
   return {
-    // La colonne author_id est obligatoire, mais l'authentification n'arrive qu'au TP 7.
-    // En attendant, l'auteur est le propriétaire de la ruche ($2 est le hive_id, utilisé deux fois).
+    async findById(id) {
+      const { rows } = await pool.query(
+        `SELECT id, hive_id, author_id, inspected_at, colony_status,
+                queen_present, observations, version, created_at, updated_at
+           FROM inspections
+          WHERE id = $1`,
+        [id],
+      );
 
-    async add(inspection) {
+      return rows[0] ?? null;
+    },
+
+    async insertIfAbsent(inspection) {
       const { rows } = await pool.query(
         `INSERT INTO inspections
-       (id, hive_id, author_id, inspected_at, colony_status, queen_present, observations)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
-     RETURNING id, hive_id, author_id, inspected_at, colony_status,
-               queen_present, observations`,
+           (id, hive_id, author_id, inspected_at, colony_status,
+            queen_present, observations)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (id) DO NOTHING
+         RETURNING id, hive_id, author_id, inspected_at, colony_status,
+                   queen_present, observations, version, created_at, updated_at`,
         [
           inspection.id,
           inspection.hive_id,
@@ -21,23 +33,66 @@ export function createInspectionsRepository(pool) {
         ],
       );
 
-      return rows[0];
+      if (rows.length === 1) {
+        return {
+          inspection: rows[0],
+          created: true,
+        };
+      }
+
+      return {
+        inspection: await this.findById(inspection.id),
+        created: false,
+      };
     },
 
-    // Ajoutée comme dans la version en mémoire : le service s'en sert pour répondre 409 plutôt que 500.
+    async updateIfVersion(inspection, expectedVersion) {
+      const { rows } = await pool.query(
+        `UPDATE inspections
+        SET inspected_at = $3,
+            colony_status = $4,
+            queen_present = $5,
+            observations = $6,
+            version = version + 1,
+            updated_at = now()
+      WHERE id = $1
+        AND hive_id = $2
+        AND version = $7
+      RETURNING id, hive_id, author_id, inspected_at, colony_status,
+                queen_present, observations, version, created_at, updated_at`,
+        [
+          inspection.id,
+          inspection.hive_id,
+          inspection.inspected_at,
+          inspection.colony_status,
+          inspection.queen_present ?? null,
+          inspection.observations ?? null,
+          expectedVersion,
+        ],
+      );
+
+      return rows[0] ?? null;
+    },
+
     async existsById(id) {
-      const { rowCount } = await pool.query(`SELECT 1 FROM inspections WHERE id = $1`, [id]);
+      const { rowCount } = await pool.query(
+        `SELECT 1 FROM inspections WHERE id = $1`,
+        [id],
+      );
+
       return rowCount > 0;
     },
 
     async findByHive(hiveId) {
       const { rows } = await pool.query(
-        `SELECT id, hive_id, inspected_at, colony_status, queen_present, observations
+        `SELECT id, hive_id, author_id, inspected_at, colony_status,
+                queen_present, observations, version, created_at, updated_at
            FROM inspections
           WHERE hive_id = $1
           ORDER BY inspected_at DESC`,
         [hiveId],
       );
+
       return rows;
     },
   };

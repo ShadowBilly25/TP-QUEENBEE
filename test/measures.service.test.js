@@ -16,8 +16,19 @@ function fauxRepository() {
     enregistrees,
 
     async add(mesure) {
+      const existante = enregistrees.find(
+        (item) =>
+          item.hive_id === mesure.hive_id &&
+          item.timestamp === mesure.timestamp
+      );
+
+      if (existante) {
+        return { measure: existante, created: false };
+      }
+
       enregistrees.push(mesure);
-      return mesure;
+
+      return { measure: mesure, created: true };
     },
 
     async findByHive() {
@@ -125,4 +136,29 @@ test("refuse la consultation des mesures si l'utilisateur n'a pas accès à la r
     service.list(autreApiculteur, "SN-CASA-001"),
     ForbiddenError
   );
+});
+
+test("n'enregistre pas deux fois une mesure avec la même ruche et le même instant", async () => {
+  const measuresRepository = fauxRepository();
+
+  const service = createMeasuresService({
+    hivesService,
+    measuresRepository,
+  });
+
+  const premiere = await service.add(
+    apiculteur,
+    "SN-CASA-001",
+    trame()
+  );
+
+  const seconde = await service.add(
+    apiculteur,
+    "SN-CASA-001",
+    trame()
+  );
+
+  assert.equal(premiere.created, true);
+  assert.equal(seconde.created, false);
+  assert.equal(measuresRepository.enregistrees.length, 1);
 });

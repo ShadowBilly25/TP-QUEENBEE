@@ -130,3 +130,22 @@ export const refreshSchema = Joi.object({
   .unknown(false)
   .messages(MESSAGES);
 
+
+  const syncInspectionItemSchema = inspectionSchema.keys({
+  hive_id: Joi.string().trim().required(),
+
+  version: Joi.number()
+    .integer()
+    .min(1)
+    .optional(),
+});
+
+export const syncInspectionsSchema = Joi.object({
+  inspections: Joi.array()
+    .items(syncInspectionItemSchema)
+    .min(1)
+    .max(500)
+    .required(),
+})
+  .unknown(false)
+  .messages(MESSAGES);

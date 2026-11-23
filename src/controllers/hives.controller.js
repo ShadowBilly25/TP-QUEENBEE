@@ -24,13 +24,13 @@ export function createHivesController({
     async addMeasure(req, res) {
       const { id } = req.validated.params;
 
-      const mesure = await measuresService.add(
+      const { measure, created } = await measuresService.add(
         req.user,
         id,
         req.validated.body,
       );
 
-      res.status(201).json(mesure);
+      res.status(created ? 201 : 200).json(measure);
     },
 
     async listMeasures(req, res) {
@@ -54,13 +54,22 @@ export function createHivesController({
     async addInspection(req, res) {
       const { id } = req.validated.params;
 
-      const inspection = await inspectionsService.add(
+      const { inspection, created } = await inspectionsService.add(
         req.user,
         id,
         req.validated.body,
       );
 
-      res.status(201).json(inspection);
+      res.status(created ? 201 : 200).json(inspection);
+    },
+
+    async syncInspections(req, res) {
+      const result = await inspectionsService.syncInspections(
+        req.user,
+        req.validated.body.inspections,
+      );
+
+      res.json(result);
     },
   };
 }

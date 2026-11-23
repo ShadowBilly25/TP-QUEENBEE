@@ -70,3 +70,8 @@ Chaque réponse HTTP 401 ou 403 est journalisée côté serveur avec le format s
 - L'adresse IP et l'identifiant de l'utilisateur sont ajoutés lorsqu'ils sont disponibles.
 - Une requête sans utilisateur authentifié est journalisée avec `utilisateur=-`.
 
+
+# TP 8 — Synchronisation idempotente
+
+Les inspections sont identifiées de manière unique : un doublon avec la même ruche est ignoré, tandis qu'un identifiant associé à une autre ruche est rejeté (409).
+Les mises à jour utilisent un contrôle de version optimiste : si la version envoyée est obsolète, le serveur conserve sa version actuelle et signale un conflit (409).
