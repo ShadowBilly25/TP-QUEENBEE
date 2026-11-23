@@ -1,27 +1,44 @@
-// Mêmes méthodes que la version en mémoire. Les valeurs passent toujours par des paramètres ($1, $2…),
-// jamais par concaténation : une valeur reste une valeur, même si elle contient du SQL.
+
 export function createHivesRepository(pool) {
   return {
-    async findAll({ site_id } = {}) {
+    async findAll({ site_id, owner_id } = {}) {
+      const conditions = [];
+      const values = [];
+
       if (site_id) {
-        const { rows } = await pool.query(
-          `SELECT id, site_id, ref_lat, ref_lon, status FROM hives WHERE site_id = $1 ORDER BY id`,
-          [site_id],
-        );
-        return rows;
+        values.push(site_id);
+        conditions.push(`site_id = $${values.length}`);
       }
+
+      if (owner_id) {
+        values.push(owner_id);
+        conditions.push(`owner_id = $${values.length}`);
+      }
+
+      const where = conditions.length
+        ? `WHERE ${conditions.join(" AND ")}`
+        : "";
+
       const { rows } = await pool.query(
-        `SELECT id, site_id, ref_lat, ref_lon, status FROM hives ORDER BY id`,
+        `SELECT id, site_id, owner_id, ref_lat, ref_lon, status
+         FROM hives
+         ${where}
+         ORDER BY id`,
+        values,
       );
+
       return rows;
     },
 
     async findById(id) {
       const { rows } = await pool.query(
-        `SELECT id, site_id, ref_lat, ref_lon, status FROM hives WHERE id = $1`,
+        `SELECT id, site_id, owner_id, ref_lat, ref_lon, status
+         FROM hives
+         WHERE id = $1`,
         [id],
       );
-      return rows[0] ?? null; // aucune ligne : null, comme la version en mémoire
+
+      return rows[0] ?? null;
     },
   };
 }

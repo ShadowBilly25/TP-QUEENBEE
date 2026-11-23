@@ -2,6 +2,7 @@
 import { Router } from "express";
 
 import { validate } from "../../middlewares/validate.js";
+import { requireRole } from "../../middlewares/auth.js";
 
 import {
   hiveParamsSchema,
@@ -11,51 +12,48 @@ import {
   inspectionSchema,
 } from "../../validators/schemas.js";
 
-// Routeur : quelle URL, quel verbe, quels intergiciels ? Aucune logique.
-// Monté sur /api/hives dans app.js : les chemins sont donc relatifs.
-export function createHivesRouter(controller) {
+export function createHivesRouter(controller, { requireAuth }) {
   const router = Router();
 
-  // Liste des ruches
+  // Toutes les routes de ruches nécessitent un token valide.
+  router.use(requireAuth);
+
   router.get(
     "/",
     validate({ query: listHivesQuerySchema }),
-    controller.list
+    controller.list,
   );
 
-  // Détail d'une ruche
   router.get(
     "/:id",
     validate({ params: hiveParamsSchema }),
-    controller.getOne
+    controller.getOne,
   );
 
-  // Ajouter une mesure
   router.post(
     "/:id/measures",
+    requireRole("admin"),
     validate({ params: hiveParamsSchema, body: measureSchema }),
-    controller.addMeasure
+    controller.addMeasure,
   );
 
-  // Consulter les mesures
   router.get(
     "/:id/measures",
     validate({ params: hiveParamsSchema, query: measuresQuerySchema }),
-    controller.listMeasures
+    controller.listMeasures,
   );
 
-  // Consulter les inspections
   router.get(
     "/:id/inspections",
     validate({ params: hiveParamsSchema }),
-    controller.listInspections
+    controller.listInspections,
   );
 
-  // Ajouter une inspection
   router.post(
     "/:id/inspections",
+    requireRole("apiculteur", "coordinateur"),
     validate({ params: hiveParamsSchema, body: inspectionSchema }),
-    controller.addInspection
+    controller.addInspection,
   );
 
   return router;

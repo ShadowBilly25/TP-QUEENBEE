@@ -82,3 +82,51 @@ export const inspectionSchema = Joi.object({
 })
   .unknown(false)
   .messages(MESSAGES);
+
+
+// -----------------------------------------------------------------------------
+// Authentification
+// -----------------------------------------------------------------------------
+
+const authEmail = Joi.string()
+  .email({ tlds: { allow: false } })
+  .max(254)
+  .required();
+
+export const registerSchema = Joi.object({
+  email: authEmail,
+
+  password: Joi.string()
+    .min(12)
+    .max(72)
+    .required(),
+
+  role: Joi.string()
+    .valid("apiculteur", "coordinateur", "gestionnaire", "admin")
+    .required(),
+
+  site_id: Joi.when("role", {
+    is: Joi.valid("apiculteur", "coordinateur"),
+    then: Joi.string().trim().required(),
+    otherwise: Joi.forbidden(),
+  }),
+})
+  .unknown(false)
+  .messages(MESSAGES);
+
+export const loginSchema = Joi.object({
+  email: authEmail,
+
+  password: Joi.string()
+    .required(),
+})
+  .unknown(false)
+  .messages(MESSAGES);
+
+export const refreshSchema = Joi.object({
+  refresh_token: Joi.string()
+    .required(),
+})
+  .unknown(false)
+  .messages(MESSAGES);
+

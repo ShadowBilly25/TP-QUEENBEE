@@ -3,8 +3,8 @@ import { ValidationError } from "../errors.js";
 
 export function createMeasuresService({ hivesService, measuresRepository }) {
   return {
-    async add(hiveId, corps) {
-      const ruche = await hivesService.getById(hiveId);
+    async add(user, hiveId, corps) {
+      const ruche = await hivesService.getHive(user, hiveId);
 
       if (corps?.hive_id !== undefined && corps.hive_id !== ruche.id) {
         throw new ValidationError(
@@ -21,8 +21,8 @@ export function createMeasuresService({ hivesService, measuresRepository }) {
       return measuresRepository.add(mesure);
     },
 
-    async list(hiveId, { limit = 50, offset = 0 } = {}) {
-      const ruche = await hivesService.getById(hiveId);
+    async list(user, hiveId, { limit = 50, offset = 0 } = {}) {
+      const ruche = await hivesService.getHive(user, hiveId);
 
       const items = await measuresRepository.findByHive(ruche.id, {
         limit,

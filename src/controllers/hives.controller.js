@@ -5,38 +5,39 @@ export function createHivesController({
   inspectionsService,
 }) {
   return {
-    // Lister les ruches
     async list(req, res) {
       const { site_id } = req.validated.query;
 
-      const ruches = await hivesService.list({
+      const ruches = await hivesService.listHives(req.user, {
         site_id: site_id || undefined,
       });
 
       res.json(ruches);
     },
 
-    // Consulter une ruche
     async getOne(req, res) {
       const { id } = req.validated.params;
 
-      res.json(await hivesService.getById(id));
+      res.json(await hivesService.getHive(req.user, id));
     },
 
-    // Ajouter une mesure
     async addMeasure(req, res) {
       const { id } = req.validated.params;
-      const mesure = await measuresService.add(id, req.validated.body);
+
+      const mesure = await measuresService.add(
+        req.user,
+        id,
+        req.validated.body,
+      );
 
       res.status(201).json(mesure);
     },
 
-    // Consulter les mesures
     async listMeasures(req, res) {
       const { id } = req.validated.params;
       const { limit, offset } = req.validated.query;
 
-      const mesures = await measuresService.list(id, {
+      const mesures = await measuresService.list(req.user, id, {
         limit,
         offset,
       });
@@ -44,19 +45,19 @@ export function createHivesController({
       res.json(mesures);
     },
 
-    // Consulter les inspections
     async listInspections(req, res) {
       const { id } = req.validated.params;
 
-      res.json(await inspectionsService.list(id));
+      res.json(await inspectionsService.list(req.user, id));
     },
 
-    // Ajouter une inspection
     async addInspection(req, res) {
       const { id } = req.validated.params;
+
       const inspection = await inspectionsService.add(
+        req.user,
         id,
-        req.validated.body
+        req.validated.body,
       );
 
       res.status(201).json(inspection);

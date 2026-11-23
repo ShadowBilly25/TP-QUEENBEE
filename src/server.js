@@ -1,26 +1,44 @@
+
 import { config } from "./config.js";
 import { createApp } from "./app.js";
-import { createMemoryRepositories } from "./repositories/memory/index.js";
 import { createPostgresRepositories } from "./repositories/postgres/index.js";
 import { createPool } from "./db.js";
 
-// server.js est le seul endroit qui choisit le stockage.
-let repositories;
+// Le TP7 impose PostgreSQL : aucun stockage mémoire.
+const pool = createPool();
 
-if (config.storage === "postgres") {
-  const pool = createPool();
-  try {
-    await pool.query("SELECT 1"); // un message clair maintenant, plutôt qu'une erreur à la 1re requête
-  } catch (err) {
-    console.error(`Impossible de joindre PostgreSQL sur ${config.db.host}:${config.db.port} : ${err.message || err.code}`);
-    process.exit(1);
-  }
-  repositories = createPostgresRepositories(pool);
-} else {
-  repositories = createMemoryRepositories();
+try {
+  await pool.query("SELECT 1");
+} catch (err) {
+  console.error(
+    `Impossible de joindre PostgreSQL sur ${config.db.host}:${config.db.port} : ${
+      err.message || err.code
+    }`,
+  );
+
+  await pool.end();
+  process.exit(1);
 }
 
-const app = createApp(repositories);
-app.listen(config.port, () => {
-  console.log(`API Queen Bee sur http://localhost:${config.port} (stockage : ${config.storage})`);
+const repositories = createPostgresRepositories(pool);
+const app = createApp({
+  ...repositories,
+  auth: config.auth,
 });
+
+const server = app.listen(config.port, () => {
+  console.log(
+    `API Queen Bee sur http://localhost:${config.port} (stockage : PostgreSQL)`,
+  );
+});
+
+// Fermeture propre du serveur et du pool.
+async function shutdown() {
+  server.close(async () => {
+    await pool.end();
+    process.exit(0);
+  });
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);

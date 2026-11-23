@@ -29,3 +29,16 @@ export class ConflictError extends AppError {
     super(message, 409, "Conflict");
   }
 }
+
+
+export class UnauthorizedError extends AppError {
+  constructor(message = "Authentification requise.") {
+    super(message, 401, "Authentification requise");
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = "Vous n'avez pas les droits nécessaires.") {
+    super(message, 403, "Accès refusé");
+  }
+}

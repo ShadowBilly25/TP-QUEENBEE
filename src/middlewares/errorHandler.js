@@ -1,22 +1,22 @@
 
 import { AppError, NotFoundError, ConflictError } from "../errors.js";
 
-// Gestion des routes inexistantes
+// Gestion des routes inexistantes.
 export function notFoundHandler(req, res, next) {
   next(
     new NotFoundError(
-      `La route ${req.method} ${req.originalUrl} est introuvable.`
-    )
+      `La route ${req.method} ${req.originalUrl} est introuvable.`,
+    ),
   );
 }
 
-// Gestion centralisée des erreurs
+// Gestion centralisée des erreurs.
 export function errorHandler(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
   }
 
-  // PostgreSQL : violation d'une contrainte d'unicité
+  // PostgreSQL : violation d'une contrainte d'unicité.
   if (err?.code === "23505") {
     err = new ConflictError("Cette ressource existe déjà.");
   }
@@ -28,6 +28,13 @@ export function errorHandler(err, req, res, next) {
   const detail = isOperationalError
     ? err.message
     : "Une erreur interne est survenue.";
+
+  // Journalisation spécifique des refus d'accès.
+  if (status === 401 || status === 403) {
+    console.warn(
+      `[accès refusé] ${status} ${req.method} ${req.originalUrl} ip=${req.ip} utilisateur=${req.user?.id ?? "-"}`,
+    );
+  }
 
   if (!isOperationalError) {
     console.error(err);
@@ -45,8 +52,14 @@ export function errorHandler(err, req, res, next) {
     problem.errors = err.details;
   }
 
-  return res
+  const response = res
     .status(status)
-    .type("application/problem+json")
-    .json(problem);
+    .type("application/problem+json");
+
+  // En-tête obligatoire pour les réponses 401.
+  if (status === 401) {
+    response.set("WWW-Authenticate", 'Bearer realm="queenbee"');
+  }
+
+  return response.json(problem);
 }

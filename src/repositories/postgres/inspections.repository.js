@@ -2,21 +2,25 @@ export function createInspectionsRepository(pool) {
   return {
     // La colonne author_id est obligatoire, mais l'authentification n'arrive qu'au TP 7.
     // En attendant, l'auteur est le propriétaire de la ruche ($2 est le hive_id, utilisé deux fois).
+
     async add(inspection) {
       const { rows } = await pool.query(
         `INSERT INTO inspections
-           (id, hive_id, author_id, inspected_at, colony_status, queen_present, observations)
-         VALUES ($1, $2, (SELECT owner_id FROM hives WHERE id = $2), $3, $4, $5, $6)
-         RETURNING id, hive_id, inspected_at, colony_status, queen_present, observations`,
+       (id, hive_id, author_id, inspected_at, colony_status, queen_present, observations)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING id, hive_id, author_id, inspected_at, colony_status,
+               queen_present, observations`,
         [
           inspection.id,
           inspection.hive_id,
+          inspection.author_id,
           inspection.inspected_at,
           inspection.colony_status,
           inspection.queen_present ?? null,
           inspection.observations ?? null,
         ],
       );
+
       return rows[0];
     },
 
